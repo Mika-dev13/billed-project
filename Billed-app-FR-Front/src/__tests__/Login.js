@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import LoginUI from "../views/LoginUI";
+import LoginUI from "../views/LoginUI.js";
 import Login from "../containers/Login.js";
 import { ROUTES } from "../constants/routes";
 import { fireEvent, screen } from "@testing-library/dom";

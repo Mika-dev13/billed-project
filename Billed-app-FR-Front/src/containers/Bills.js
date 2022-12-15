@@ -20,6 +20,7 @@ export default class {
     this.onNavigate(ROUTES_PATH['NewBill'])
   }
 
+  /* istanbul ignore next */
   handleClickIconEye = (icon) => {
     const billUrl = icon.getAttribute("data-bill-url")
     const imgWidth = Math.floor($('#modaleFile').width() * 0.5)
@@ -27,6 +28,7 @@ export default class {
     $('#modaleFile').modal('show')
   }
 
+  /* istanbul ignore next */
   getBills = () => {
     if (this.store) {
       return this.store
@@ -35,6 +37,7 @@ export default class {
       .then(snapshot => {
         const bills = snapshot
           .map(doc => {
+            console.log(doc)
             try {
               return {
                 ...doc,
@@ -53,6 +56,7 @@ export default class {
             }
           })
           console.log('length', bills.length)
+         
         return bills
       })
     }
