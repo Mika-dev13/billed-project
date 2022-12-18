@@ -15,7 +15,7 @@ export default class NewBill {
     this.billId = null
     new Logout({ document, localStorage, onNavigate })
   }
-  handleChangeFile = e => {
+  handleChangeFile = async e => {
     e.preventDefault()
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
@@ -25,6 +25,7 @@ export default class NewBill {
     formData.append('file', file)
     formData.append('email', email)
 
+    if(e.target.value.includes('jpeg') || e.target.value.includes('jpg') || e.target.value.includes('png')) {
     this.store
       .bills()
       .create({
@@ -34,11 +35,18 @@ export default class NewBill {
         }
       })
       .then(({fileUrl, key}) => {
-        console.log(fileUrl)
         this.billId = key
         this.fileUrl = fileUrl
         this.fileName = fileName
+        console.log(fileUrl, fileName)
       }).catch(error => console.error(error))
+    } else {
+      let errorMessage = document.createElement('p');
+      errorMessage.classList.add('text-danger', 'h6');
+      errorMessage.setAttribute('data-testid', 'errorMessage')
+      errorMessage.innerText = 'Vous devez choisir un fichier au format .jpg, .jpeg ou .png'
+      e.target.parentNode.append(errorMessage)
+    }
   }
   handleSubmit = e => {
     e.preventDefault()
