@@ -15,6 +15,10 @@ import router from "../app/Router.js";
 
 jest.mock("../app/store", () => mockStore);
 
+const onNavigate = (pathname) => {
+  document.body.innerHTML = ROUTES({ pathname });
+};
+
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
     test("Then the newBill should be render", () => {
@@ -40,9 +44,38 @@ describe("Given I am connected as an employee", () => {
       expect(screen.getAllByTestId("icon-mail")).toBeTruthy();
     });
   });
-});
 
-describe("Given I am a user connected as Employee", () => {
+  describe("When I upload a file with invalid format", () => {
+    test("Then it should display an error message", () => {
+      document.body.innerHTML = NewBillUI();
+      //Instanciation class NewBill
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        store: null,
+        localStorage: window.localStorage,
+      });
+
+      //simulate loading file
+      const handleChangeFile = jest.fn(() => newBill.handleChangeFile);
+      const inputFile = screen.getByTestId("file");
+
+      //Listen charging file
+      inputFile.addEventListener("change", handleChangeFile);
+
+      //Simulate it with FireEvent
+      fireEvent.change(inputFile, {
+        target: {
+          files: [new File(["test.txt"], "test.txt", { type: "image/txt" })],
+        },
+      });
+
+      //An error message have to appear
+      const error = screen.getByTestId("errorMessage");
+      expect(error).toBeTruthy();
+    });
+  });
+
   describe("When I submit the form completed", () => {
     test("Then the bill is created", async () => {
       const html = NewBillUI();
@@ -106,3 +139,5 @@ describe("Given I am a user connected as Employee", () => {
     });
   });
 });
+
+describe("Given I am a user connected as Employee", () => {});
