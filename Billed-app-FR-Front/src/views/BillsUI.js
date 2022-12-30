@@ -1,11 +1,11 @@
-import VerticalLayout from './VerticalLayout.js'
-import ErrorPage from "./ErrorPage.js"
-import LoadingPage from "./LoadingPage.js"
+import VerticalLayout from "./VerticalLayout.js";
+import ErrorPage from "./ErrorPage.js";
+import LoadingPage from "./LoadingPage.js";
 
-import Actions from './Actions.js'
+import Actions from "./Actions.js";
 
 const row = (bill) => {
-  return (`
+  return `
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
@@ -16,17 +16,22 @@ const row = (bill) => {
         ${Actions(bill.fileUrl)}
       </td>
     </tr>
-    `)
-  }
+    `;
+};
 
 const rows = (data) => {
-  return (data && data.length) ? data.sort((a,b)=> a.date < b.date ? 1 : -1).map(bill => row(bill)).join("") : ""
-}
+  // date(a.date)
+  return data && data.length
+    ? data
+        .sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1))
+        .map((bill) => row(bill))
+        .join("")
+    : "";
+};
 
 export default ({ data: bills, loading, error }) => {
-  
-  const modal = () => (`
-    <div class="modal fade" id="modaleFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  const modal = () => `
+    <div class="modal fade" id="modaleFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-testid="modalFile">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -40,20 +45,20 @@ export default ({ data: bills, loading, error }) => {
         </div>
       </div>
     </div>
-  `)
+  `;
 
   if (loading) {
-    return LoadingPage()
+    return LoadingPage();
   } else if (error) {
-    return ErrorPage(error)
+    return ErrorPage(error);
   }
-  
-  return (`
+
+  return `
     <div class='layout'>
       ${VerticalLayout(120)}
       <div class='content'>
         <div class='content-header'>
-          <div class='content-title'> Mes notes de frais </div>
+          <div class='content-title'>Mes notes de frais</div>
           <button type="button" data-testid='btn-new-bill' class="btn btn-primary">Nouvelle note de frais</button>
         </div>
         <div id="data-table">
@@ -75,6 +80,5 @@ export default ({ data: bills, loading, error }) => {
         </div>
       </div>
       ${modal()}
-    </div>`
-  )
-}
+    </div>`;
+};
